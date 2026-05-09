@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Canvas Sketchpad</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      text-align: center;
+    }
+
+    h2 {
+      margin: 15px 0;
+    }
+
+    .controls {
+      margin-bottom: 10px;
+    }
+
+    canvas {
+      border: 2px solid #333;
+      background: #ffffff;
+      cursor: crosshair;
+    }
+
+    input, button {
+      padding: 8px 10px;
+      margin: 5px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Canvas Sketchpad</h2>
+
+  <div class="controls">
+    <label>Brush Color:</label>
+    <input type="color" id="colorPicker" value="#000000">
+
+    <label>Brush Size:</label>
+    <input type="range" id="brushSize" min="1" max="20" value="3">
+
+    <button id="clearBtn">Clear Canvas</button>
+  </div>
+
+  <canvas id="canvas" width="800" height="500"></canvas>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const colorPicker = document.getElementById("colorPicker");
+    const brushSize = document.getElementById("brushSize");
+    const clearBtn = document.getElementById("clearBtn");
+
+    let isDrawing = false;
+
+    function startDrawing(e) {
+      isDrawing = true;
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.strokeStyle = colorPicker.value;
+      ctx.lineWidth = brushSize.value;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.stroke();
+    }
+
+    function stopDrawing() {
+      isDrawing = false;
+      ctx.closePath();
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    
+    canvas.addEventListener("mousedown", startDrawing);
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("mouseup", stopDrawing);
+    canvas.addEventListener("mouseleave", stopDrawing);
+
+
+    clearBtn.addEventListener("click", clearCanvas);
+  </script>
+
+</body>
+</html>
+
